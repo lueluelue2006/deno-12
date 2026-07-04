@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>转运清单</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, "PingFang SC", sans-serif;
+      background: #fff;
+      color: #222;
+      font-size: 15px;
+      line-height: 1.5;
+      padding: 40px 20px 60px;
+    }
+
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .sub {
+      color: #999;
+      font-size: 13px;
+      margin-bottom: 32px;
+    }
+
+    .status {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 24px;
+      min-height: 18px;
+    }
+
+    .status.ok { color: #6a6; }
+    .status.err { color: #d44; }
+
+    .group {
+      margin-bottom: 28px;
+    }
+
+    .group-name {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 8px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 12px;
+    }
+
+    .item-name {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-name small {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 1px;
+    }
+
+    .checks {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .check {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: #aaa;
+      cursor: pointer;
+      user-select: none;
+      width: 36px;
+    }
+
+    .check input {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #333;
+    }
+
+    .check.on { color: #333; }
+
+    .add {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px 0;
+      border: none;
+      background: none;
+      color: #bbb;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .add:hover { color: #666; }
+
+    @media (max-width: 480px) {
+      .checks { gap: 8px; }
+      .check { width: 32px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>转运清单</h1>
+    <p class="sub">不含食品 · 本地 data.json · 在线只读版需运行 sync.py 后发布</p>
+    <p class="status" id="status"></p>
+    <div id="list"></div>
+    <button class="add" id="add">+ 添加</button>
+  </div>
+
+  <script>
+    const ORDER = ["冬季保暖", "冬季小物", "文具", "日用品", "电子产品", "其他"];
+    const FIELDS = ["bought", "opened", "packed"];
+    const LABELS = ["已买", "已拆", "已装箱"];
+
+    let items = [];
+
+    function normalize(item) {
+      if ("brought" in item) {
+        item.packed = item.packed || item.brought;
+        delete item.brought;
+      }
+      return item;
+    }
+
+    async function load() {
+      const res = await fetch("/api/items");
+      items = (await res.json()).map(normalize);
+      render();
+      setStatus("已连接本地服务", true);
+    }
+
+    async function save() {
+      try {
+        await fetch("/api/items", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(items),
+        });
+        setStatus("已保存", true);
+      } catch {
+        setStatus("保存失败，服务是否在运行？", false);
+      }
+    }
+
+    function setStatus(msg, ok) {
+      const el = document.getElementById("status");
+      el.textContent = msg;
+      el.className = "status" + (ok ? " ok" : " err");
+    }
+
+    function render() {
+      const groups = {};
+      items.forEach(i => {
+        if (!groups[i.cat]) groups[i.cat] = [];
+        groups[i.cat].push(i);
+      });
+
+      document.getElementById("list").innerHTML = ORDER
+        .filter(c => groups[c])
+        .map(cat => `
+          <div class="group">
+            <div class="group-name">${cat}</div>
+            ${groups[cat].map(item => `
+              <div class="item" data-id="${item.id}">
+                <div class="item-name">
+                  ${esc(item.name)}
+                  ${item.note ? `<small>${esc(item.note)}</small>` : ""}
+                </div>
+                <div class="checks">
+                  ${FIELDS.map((f, i) => `
+                    <label class="check${item[f] ? " on" : ""}">
+                      <input type="checkbox" data-f="${f}" ${item[f] ? "checked" : ""}>
+                      ${LABELS[i]}
+                    </label>
+                  `).join("")}
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `).join("");
+
+      document.querySelectorAll(".item").forEach(row => {
+        const id = +row.dataset.id;
+        row.querySelectorAll("input").forEach(el => {
+          el.addEventListener("change", () => {
+            const item = items.find(i => i.id === id);
+            item[el.dataset.f] = el.checked;
+            el.closest(".check").classList.toggle("on", el.checked);
+            save();
+          });
+        });
+      });
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+    }
+
+    document.getElementById("add").onclick = () => {
+      const name = prompt("物品名称");
+      if (!name?.trim()) return;
+      items.push({
+        id: Math.max(0, ...items.map(i => i.id)) + 1,
+        cat: "其他", name: name.trim(), note: "",
+        bought: false, opened: false, packed: false,
+      });
+      save();
+      render();
+    };
+
+    load().catch(() => {
+      setStatus("请先双击「启动.command」打开本地服务", false);
+    });
+  </script>
+</body>
+</html>

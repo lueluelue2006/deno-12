@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>转运清单</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "PingFang SC", sans-serif;
+      background: #fff;
+      color: #222;
+      font-size: 15px;
+      line-height: 1.5;
+      padding: 40px 20px 60px;
+    }
+    .wrap { max-width: 640px; margin: 0 auto; }
+    h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+    .sub { color: #999; font-size: 13px; margin-bottom: 32px; }
+    .group { margin-bottom: 28px; }
+    .group-name { font-size: 13px; color: #999; margin-bottom: 8px; }
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 12px;
+    }
+    .item-name { flex: 1; min-width: 0; }
+    .item-name small { display: block; font-size: 12px; color: #aaa; margin-top: 1px; }
+    .tags { display: flex; gap: 10px; flex-shrink: 0; }
+    .tag {
+      font-size: 11px;
+      color: #ddd;
+      width: 36px;
+      text-align: center;
+    }
+    .tag.on { color: #333; font-weight: 600; }
+    .foot { margin-top: 40px; font-size: 12px; color: #ccc; text-align: center; }
+    .err { color: #d44; font-size: 13px; }
+    @media (max-width: 480px) {
+      .tags { gap: 8px; }
+      .tag { width: 32px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>转运清单</h1>
+    <p class="sub">不含食品 · 只读展示</p>
+    <div id="list"></div>
+    <p class="foot">勾选请在本地版操作，这里不会保存任何改动</p>
+  </div>
+  <script>
+    const ORDER = ["冬季保暖", "冬季小物", "文具", "日用品", "电子产品", "其他"];
+    const FIELDS = ["bought", "opened", "packed"];
+    const LABELS = ["已买", "已拆", "已装箱"];
+
+    function esc(s) {
+      return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+    }
+
+    function render(items) {
+      const groups = {};
+      items.forEach(i => {
+        if (!groups[i.cat]) groups[i.cat] = [];
+        groups[i.cat].push(i);
+      });
+      document.getElementById("list").innerHTML = ORDER
+        .filter(c => groups[c])
+        .map(cat => `
+          <div class="group">
+            <div class="group-name">${cat}</div>
+            ${groups[cat].map(item => `
+              <div class="item">
+                <div class="item-name">
+                  ${esc(item.name)}
+                  ${item.note ? `<small>${esc(item.note)}</small>` : ""}
+                </div>
+                <div class="tags">
+                  ${FIELDS.map((f, i) => `
+                    <span class="tag${item[f] ? " on" : ""}">${LABELS[i]}</span>
+                  `).join("")}
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `).join("");
+    }
+
+    const items = [{"id": 1, "cat": "冬季保暖", "name": "薄羽绒服", "note": "2-3件，家里室内穿", "bought": false, "opened": false, "packed": false}, {"id": 2, "cat": "冬季保暖", "name": "薄款长袖/卫衣", "note": "居家穿，轻便", "bought": false, "opened": false, "packed": false}, {"id": 18, "cat": "冬季保暖", "name": "睡裤", "note": "居家穿", "bought": false, "opened": false, "packed": false}, {"id": 3, "cat": "冬季保暖", "name": "羊毛袜/厚袜子", "note": "爸买的", "bought": true, "opened": true, "packed": false}, {"id": 4, "cat": "冬季保暖", "name": "围巾", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 11, "cat": "冬季保暖", "name": "手套", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 12, "cat": "冬季保暖", "name": "护脖帽", "note": "能护脖子那种", "bought": false, "opened": false, "packed": false}, {"id": 5, "cat": "冬季小物", "name": "暖宝宝/暖贴", "note": "？待问能否带", "bought": false, "opened": false, "packed": false}, {"id": 7, "cat": "冬季小物", "name": "热水袋", "note": "？不一定能带", "bought": false, "opened": false, "packed": false}, {"id": 8, "cat": "文具", "name": "中性笔/铅笔", "note": "最后再说，得自己买去试", "bought": false, "opened": false, "packed": false}, {"id": 10, "cat": "文具", "name": "便利贴", "note": "可以考虑买一点", "bought": false, "opened": false, "packed": false}, {"id": 13, "cat": "文具", "name": "胶带", "note": "一定要买，细的粗的都要", "bought": false, "opened": false, "packed": false}, {"id": 22, "cat": "文具", "name": "订书机", "note": "爸买的", "bought": true, "opened": false, "packed": false}, {"id": 23, "cat": "文具", "name": "文件袋", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 14, "cat": "日用品", "name": "手机壳", "note": "已有1个，再来1个就够", "bought": false, "opened": false, "packed": false}, {"id": 15, "cat": "日用品", "name": "数据线", "note": "？不一定要买", "bought": false, "opened": false, "packed": false}, {"id": 16, "cat": "日用品", "name": "转换插头", "note": "小的大的都要买", "bought": false, "opened": false, "packed": false}, {"id": 19, "cat": "日用品", "name": "拖鞋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 20, "cat": "日用品", "name": "耳塞", "note": "考虑再买几个新的", "bought": false, "opened": false, "packed": false}, {"id": 21, "cat": "日用品", "name": "雨伞", "note": "要带", "bought": false, "opened": false, "packed": false}, {"id": 24, "cat": "日用品", "name": "创可贴/常用药", "note": "感冒药、止痛片等，量别太大", "bought": false, "opened": false, "packed": false}, {"id": 25, "cat": "日用品", "name": "鞋子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 26, "cat": "日用品", "name": "擦眼镜纸", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 27, "cat": "日用品", "name": "指甲刀", "note": "考虑再买", "bought": false, "opened": false, "packed": false}, {"id": 28, "cat": "日用品", "name": "小风扇", "note": "", "bought": false, "opened": false, "packed": false}];
+    render(items);
+  </script>
+</body>
+</html>
