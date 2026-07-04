@@ -6,5 +6,5 @@ git diff --cached --quiet || git commit -m "sync $(date '+%Y-%m-%d %H:%M')"
 git push
 npx --yes gh-pages -d web
 echo ""
-echo "已发布 → https://lueluelue2006.github.io/zhuanyun-list/"
+echo "已发布 → https://lueluelue2006.github.io/deno-12/"
 echo "（在线版只展示，不记录勾选）"
