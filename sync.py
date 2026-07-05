@@ -6,6 +6,7 @@ from pathlib import Path
 root = Path(__file__).parent
 web = root / "web"
 web.mkdir(exist_ok=True)
+(web / ".nojekyll").touch()
 
 data = json.loads((root / "data.json").read_text(encoding="utf-8"))
 shutil.copy2(root / "data.json", web / "data.json")
