@@ -1,27 +1,560 @@
 [
-  {"id": 1,  "cat": "冬季保暖", "name": "薄羽绒服",      "note": "2-3件，家里室内穿", "bought": false, "opened": false, "packed": false},
-  {"id": 2,  "cat": "冬季保暖", "name": "薄款长袖/卫衣",  "note": "居家穿，轻便", "bought": false, "opened": false, "packed": false},
-  {"id": 18, "cat": "冬季保暖", "name": "睡裤",          "note": "居家穿", "bought": false, "opened": false, "packed": false},
-  {"id": 3,  "cat": "冬季保暖", "name": "羊毛袜/厚袜子", "note": "爸买的", "bought": true, "opened": true, "packed": false},
-  {"id": 4,  "cat": "冬季保暖", "name": "围巾",          "note": "", "bought": false, "opened": false, "packed": false},
-  {"id": 11, "cat": "冬季保暖", "name": "手套",          "note": "", "bought": false, "opened": false, "packed": false},
-  {"id": 12, "cat": "冬季保暖", "name": "护脖帽",        "note": "能护脖子那种", "bought": false, "opened": false, "packed": false},
-  {"id": 5,  "cat": "冬季小物", "name": "暖宝宝/暖贴",    "note": "？待问能否带", "bought": false, "opened": false, "packed": false},
-  {"id": 7,  "cat": "冬季小物", "name": "热水袋",        "note": "？不一定能带", "bought": false, "opened": false, "packed": false},
-  {"id": 8,  "cat": "文具",     "name": "中性笔/铅笔",   "note": "最后再说，得自己买去试", "bought": false, "opened": false, "packed": false},
-  {"id": 10, "cat": "文具",     "name": "便利贴",        "note": "可以考虑买一点", "bought": false, "opened": false, "packed": false},
-  {"id": 13, "cat": "文具",     "name": "胶带",          "note": "一定要买，细的粗的都要", "bought": false, "opened": false, "packed": false},
-  {"id": 22, "cat": "文具",     "name": "订书机",        "note": "爸买的", "bought": true, "opened": false, "packed": false},
-  {"id": 23, "cat": "文具",     "name": "文件袋",        "note": "", "bought": true, "opened": false, "packed": false},
-  {"id": 14, "cat": "日用品",   "name": "手机壳",        "note": "已有1个，再来1个就够", "bought": false, "opened": false, "packed": false},
-  {"id": 15, "cat": "日用品",   "name": "数据线",        "note": "？不一定要买", "bought": false, "opened": false, "packed": false},
-  {"id": 16, "cat": "日用品",   "name": "转换插头",      "note": "小的大的都要买", "bought": false, "opened": false, "packed": false},
-  {"id": 19, "cat": "日用品",   "name": "拖鞋",          "note": "", "bought": false, "opened": false, "packed": false},
-  {"id": 20, "cat": "日用品",   "name": "耳塞",          "note": "考虑再买几个新的", "bought": false, "opened": false, "packed": false},
-  {"id": 21, "cat": "日用品",   "name": "雨伞",          "note": "要带", "bought": false, "opened": false, "packed": false},
-  {"id": 24, "cat": "日用品",   "name": "创可贴/常用药", "note": "感冒药、止痛片等，量别太大", "bought": false, "opened": false, "packed": false},
-  {"id": 25, "cat": "日用品",   "name": "鞋子",          "note": "", "bought": false, "opened": false, "packed": false},
-  {"id": 26, "cat": "日用品",   "name": "擦眼镜纸",      "note": "", "bought": true, "opened": false, "packed": false},
-  {"id": 27, "cat": "日用品",   "name": "指甲刀",        "note": "考虑再买", "bought": false, "opened": false, "packed": false},
-  {"id": 28, "cat": "日用品",   "name": "小风扇",        "note": "", "bought": false, "opened": false, "packed": false}
+  {
+    "id": 1,
+    "cat": "冬季保暖",
+    "name": "薄羽绒服",
+    "note": "2-3件，家里室内穿",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 2,
+    "cat": "冬季保暖",
+    "name": "薄款长袖/卫衣",
+    "note": "居家穿，轻便",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 3,
+    "cat": "冬季保暖",
+    "name": "宽松睡裤",
+    "note": "居家穿",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 4,
+    "cat": "冬季保暖",
+    "name": "冰丝衣服/冰丝睡衣",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 5,
+    "cat": "冬季保暖",
+    "name": "羊毛袜/厚袜子",
+    "note": "爸买的",
+    "bought": true,
+    "opened": true,
+    "packed": false
+  },
+  {
+    "id": 6,
+    "cat": "冬季保暖",
+    "name": "围巾",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 7,
+    "cat": "冬季保暖",
+    "name": "手套",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 8,
+    "cat": "冬季保暖",
+    "name": "护脖帽",
+    "note": "能护脖子那种",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 9,
+    "cat": "冬季小物",
+    "name": "暖宝宝/暖贴",
+    "note": "？待问能否带",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 10,
+    "cat": "冬季小物",
+    "name": "热水袋",
+    "note": "？不一定能带",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 11,
+    "cat": "文具",
+    "name": "黑色中性笔",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 12,
+    "cat": "文具",
+    "name": "蓝色中性笔",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 13,
+    "cat": "文具",
+    "name": "铅笔",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 14,
+    "cat": "文具",
+    "name": "橡皮",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 15,
+    "cat": "文具",
+    "name": "修正带",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 16,
+    "cat": "文具",
+    "name": "便利贴",
+    "note": "可以考虑买一点",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 17,
+    "cat": "文具",
+    "name": "订书机",
+    "note": "爸买的",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 18,
+    "cat": "文具",
+    "name": "订书钉",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 19,
+    "cat": "文具",
+    "name": "小尺子",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 20,
+    "cat": "文具",
+    "name": "量角器",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 21,
+    "cat": "文具",
+    "name": "小号打孔器",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 22,
+    "cat": "文具",
+    "name": "胶带",
+    "note": "一定要买，细的粗的都要",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 23,
+    "cat": "文具",
+    "name": "文件袋",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 24,
+    "cat": "文具",
+    "name": "文件风琴包",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 25,
+    "cat": "文具",
+    "name": "标签贴/粘贴标签",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 26,
+    "cat": "日用品",
+    "name": "防滑拖鞋",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 27,
+    "cat": "日用品",
+    "name": "鞋子",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 28,
+    "cat": "日用品",
+    "name": "USB-A转USB-C数据线",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 29,
+    "cat": "日用品",
+    "name": "Type-C转USB-A母口OTG转接头",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 30,
+    "cat": "日用品",
+    "name": "U盘",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 31,
+    "cat": "日用品",
+    "name": "魔术贴扎带/理线带",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 32,
+    "cat": "日用品",
+    "name": "小收纳包/小铅笔盒",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 33,
+    "cat": "日用品",
+    "name": "AirTag保护套",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 34,
+    "cat": "日用品",
+    "name": "结实钥匙环/加厚钥匙扣环",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 35,
+    "cat": "日用品",
+    "name": "手机壳",
+    "note": "已有1个，再来1个就够",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 36,
+    "cat": "日用品",
+    "name": "转换插头",
+    "note": "小的大的都要买",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 37,
+    "cat": "日用品",
+    "name": "卷尺",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 38,
+    "cat": "日用品",
+    "name": "小钳子",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 39,
+    "cat": "日用品",
+    "name": "小镊子",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 40,
+    "cat": "日用品",
+    "name": "强力双面胶",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 41,
+    "cat": "日用品",
+    "name": "纳米胶/魔术胶/无痕胶",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 42,
+    "cat": "日用品",
+    "name": "免打孔挂钩",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 43,
+    "cat": "日用品",
+    "name": "窗户蚊帐/纱窗",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 44,
+    "cat": "日用品",
+    "name": "花洒支架/淋浴喷头支架",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 45,
+    "cat": "日用品",
+    "name": "小刷子",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 46,
+    "cat": "日用品",
+    "name": "衣服收纳袋",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 47,
+    "cat": "日用品",
+    "name": "抽绳袋",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 48,
+    "cat": "日用品",
+    "name": "脏衣抽绳袋",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 49,
+    "cat": "日用品",
+    "name": "可折叠购物袋",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 50,
+    "cat": "日用品",
+    "name": "厚一点的大塑料袋",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 51,
+    "cat": "日用品",
+    "name": "折叠垃圾桶/折叠垃圾架",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 52,
+    "cat": "日用品",
+    "name": "防水证件袋",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 53,
+    "cat": "日用品",
+    "name": "密码锁",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 54,
+    "cat": "日用品",
+    "name": "一次性压缩毛巾",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 55,
+    "cat": "日用品",
+    "name": "牙线",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 56,
+    "cat": "日用品",
+    "name": "牙刷",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 57,
+    "cat": "日用品",
+    "name": "擦眼镜纸",
+    "note": "",
+    "bought": true,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 58,
+    "cat": "日用品",
+    "name": "指甲刀",
+    "note": "考虑再买",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 59,
+    "cat": "日用品",
+    "name": "耳塞",
+    "note": "考虑再买几个新的",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 60,
+    "cat": "日用品",
+    "name": "雨伞",
+    "note": "要带",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 61,
+    "cat": "日用品",
+    "name": "创可贴",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 62,
+    "cat": "日用品",
+    "name": "小风扇",
+    "note": "",
+    "bought": false,
+    "opened": false,
+    "packed": false
+  }
 ]
