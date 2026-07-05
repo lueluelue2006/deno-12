@@ -16,8 +16,10 @@ marker = "/*__DATA__*/"
 if marker not in template:
     raise SystemExit("template.html 缺少数据占位符")
 
-(web / "index.html").write_text(
-    template.replace(marker, json.dumps(data, ensure_ascii=False)),
-    encoding="utf-8",
-)
+from datetime import datetime
+
+meta = f"{len(data)} 项 · {datetime.now().strftime('%m-%d %H:%M')}"
+html = template.replace(marker, json.dumps(data, ensure_ascii=False))
+html = html.replace("/*__META__*/", meta)
+(web / "index.html").write_text(html, encoding="utf-8")
 print(f"已同步 {len(data)} 项 → web/index.html")
