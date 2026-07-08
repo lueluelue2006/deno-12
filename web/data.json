@@ -3,10 +3,12 @@
     "id": 1,
     "cat": "冬季保暖",
     "name": "薄羽绒服",
-    "note": "2-3件，家里室内穿",
-    "bought": true,
+    "note": "2-3件，目前只买了一件",
+    "bought": false,
     "opened": false,
-    "packed": false
+    "packed": false,
+    "buy_target": 3,
+    "buy_count": 1
   },
   {
     "id": 2,
@@ -166,7 +168,7 @@
     "cat": "文具",
     "name": "小尺子",
     "note": "",
-    "bought": false,
+    "bought": true,
     "opened": false,
     "packed": false
   },
@@ -175,7 +177,7 @@
     "cat": "文具",
     "name": "量角器",
     "note": "",
-    "bought": false,
+    "bought": true,
     "opened": false,
     "packed": false
   },
@@ -554,6 +556,15 @@
     "name": "小风扇",
     "note": "",
     "bought": false,
+    "opened": false,
+    "packed": false
+  },
+  {
+    "id": 63,
+    "cat": "其他",
+    "name": "雪茄盒",
+    "note": "",
+    "bought": true,
     "opened": false,
     "packed": false
   }

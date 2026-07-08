@@ -35,30 +35,102 @@
       color: #ddd;
       width: 36px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
     }
     .tag.on { color: #333; font-weight: 600; }
+    .tag.wide { width: 44px; }
+
+    .buy-box {
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid #bbb;
+      border-radius: 2px;
+      background: #fff;
+    }
+    .buy-box.partial {
+      border-color: #333;
+      background: repeating-linear-gradient(
+        -45deg,
+        #fff,
+        #fff 2px,
+        #bbb 2px,
+        #bbb 3px
+      );
+    }
+    .buy-box.done {
+      border-color: #333;
+      background: #333;
+      position: relative;
+    }
+    .buy-box.done::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 1px;
+      width: 5px;
+      height: 8px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    .buy-num {
+      font-size: 9px;
+      color: #999;
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+    }
+    .tag.on .buy-num { color: #666; }
+
     .foot { margin-top: 40px; font-size: 12px; color: #ccc; text-align: center; }
     .err { color: #d44; font-size: 13px; }
     @media (max-width: 480px) {
       .tags { gap: 8px; }
-      .tag { width: 32px; font-size: 10px; }
+      .tag { width: 32px; }
+      .tag.wide { width: 40px; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>转运清单</h1>
-    <p class="sub">不含食品 · 只读展示 · 62 项 · 07-05 13:34</p>
+    <p class="sub">不含食品 · 只读展示 · 63 项 · 07-08 11:43</p>
     <div id="list"></div>
     <p class="foot">勾选请在本地版操作，这里不会保存任何改动</p>
   </div>
   <script>
     const ORDER = ["冬季保暖", "冬季小物", "文具", "日用品", "电子产品", "其他"];
-    const FIELDS = ["bought", "opened", "packed"];
-    const LABELS = ["已买", "已拆", "已装箱"];
+    const FIELDS = ["opened", "packed"];
+    const LABELS = ["已拆", "已装箱"];
 
     function esc(s) {
       return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+    }
+
+    function buyState(item) {
+      if (!item.buy_target) return item.bought ? "done" : "none";
+      if (item.buy_count >= item.buy_target) return "done";
+      if (item.buy_count > 0) return "partial";
+      return "none";
+    }
+
+    function renderBought(item) {
+      if (item.buy_target > 0) {
+        const st = buyState(item);
+        const on = st !== "none";
+        return `
+          <span class="tag wide${on ? " on" : ""}">
+            <div class="buy-box ${st}"></div>
+            <span class="buy-num">${item.buy_count}/${item.buy_target}</span>
+            已买
+          </span>
+        `;
+      }
+      return `
+        <span class="tag${item.bought ? " on" : ""}">已买</span>
+      `;
     }
 
     function render(items) {
@@ -79,6 +151,7 @@
                   ${item.note ? `<small>${esc(item.note)}</small>` : ""}
                 </div>
                 <div class="tags">
+                  ${renderBought(item)}
                   ${FIELDS.map((f, i) => `
                     <span class="tag${item[f] ? " on" : ""}">${LABELS[i]}</span>
                   `).join("")}
@@ -89,7 +162,7 @@
         `).join("");
     }
 
-    const items = [{"id": 1, "cat": "冬季保暖", "name": "薄羽绒服", "note": "2-3件，家里室内穿", "bought": true, "opened": false, "packed": false}, {"id": 2, "cat": "冬季保暖", "name": "薄款长袖/卫衣", "note": "居家穿，轻便", "bought": true, "opened": false, "packed": false}, {"id": 3, "cat": "冬季保暖", "name": "宽松睡裤", "note": "居家穿", "bought": true, "opened": false, "packed": false}, {"id": 4, "cat": "冬季保暖", "name": "冰丝衣服/冰丝睡衣", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 5, "cat": "冬季保暖", "name": "羊毛袜/厚袜子", "note": "爸买的", "bought": true, "opened": true, "packed": false}, {"id": 6, "cat": "冬季保暖", "name": "围巾", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 7, "cat": "冬季保暖", "name": "手套", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 8, "cat": "冬季保暖", "name": "护脖帽", "note": "能护脖子那种", "bought": true, "opened": false, "packed": false}, {"id": 9, "cat": "冬季小物", "name": "暖宝宝/暖贴", "note": "？待问能否带", "bought": false, "opened": false, "packed": false}, {"id": 10, "cat": "冬季小物", "name": "热水袋", "note": "？不一定能带", "bought": false, "opened": false, "packed": false}, {"id": 11, "cat": "文具", "name": "黑色中性笔", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 12, "cat": "文具", "name": "蓝色中性笔", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 13, "cat": "文具", "name": "铅笔", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 14, "cat": "文具", "name": "橡皮", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 15, "cat": "文具", "name": "修正带", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 16, "cat": "文具", "name": "便利贴", "note": "可以考虑买一点", "bought": false, "opened": false, "packed": false}, {"id": 17, "cat": "文具", "name": "订书机", "note": "爸买的", "bought": true, "opened": false, "packed": false}, {"id": 18, "cat": "文具", "name": "订书钉", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 19, "cat": "文具", "name": "小尺子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 20, "cat": "文具", "name": "量角器", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 21, "cat": "文具", "name": "小号打孔器", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 22, "cat": "文具", "name": "胶带", "note": "一定要买，细的粗的都要", "bought": false, "opened": false, "packed": false}, {"id": 23, "cat": "文具", "name": "文件袋", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 24, "cat": "文具", "name": "文件风琴包", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 25, "cat": "文具", "name": "标签贴/粘贴标签", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 26, "cat": "日用品", "name": "防滑拖鞋", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 27, "cat": "日用品", "name": "鞋子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 28, "cat": "日用品", "name": "USB-A转USB-C数据线", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 29, "cat": "日用品", "name": "Type-C转USB-A母口OTG转接头", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 30, "cat": "日用品", "name": "U盘", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 31, "cat": "日用品", "name": "魔术贴扎带/理线带", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 32, "cat": "日用品", "name": "小收纳包/小铅笔盒", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 33, "cat": "日用品", "name": "AirTag保护套", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 34, "cat": "日用品", "name": "结实钥匙环/加厚钥匙扣环", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 35, "cat": "日用品", "name": "手机壳", "note": "已有1个，再来1个就够", "bought": false, "opened": false, "packed": false}, {"id": 36, "cat": "日用品", "name": "转换插头", "note": "小的大的都要买", "bought": true, "opened": false, "packed": false}, {"id": 37, "cat": "日用品", "name": "卷尺", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 38, "cat": "日用品", "name": "小钳子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 39, "cat": "日用品", "name": "小镊子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 40, "cat": "日用品", "name": "强力双面胶", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 41, "cat": "日用品", "name": "纳米胶/魔术胶/无痕胶", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 42, "cat": "日用品", "name": "免打孔挂钩", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 43, "cat": "日用品", "name": "窗户蚊帐/纱窗", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 44, "cat": "日用品", "name": "花洒支架/淋浴喷头支架", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 45, "cat": "日用品", "name": "小刷子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 46, "cat": "日用品", "name": "衣服收纳袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 47, "cat": "日用品", "name": "抽绳袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 48, "cat": "日用品", "name": "脏衣抽绳袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 49, "cat": "日用品", "name": "可折叠购物袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 50, "cat": "日用品", "name": "厚一点的大塑料袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 51, "cat": "日用品", "name": "折叠垃圾桶/折叠垃圾架", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 52, "cat": "日用品", "name": "防水证件袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 53, "cat": "日用品", "name": "密码锁", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 54, "cat": "日用品", "name": "一次性压缩毛巾", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 55, "cat": "日用品", "name": "牙线", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 56, "cat": "日用品", "name": "牙刷", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 57, "cat": "日用品", "name": "擦眼镜纸", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 58, "cat": "日用品", "name": "指甲刀", "note": "考虑再买", "bought": false, "opened": false, "packed": false}, {"id": 59, "cat": "日用品", "name": "耳塞", "note": "考虑再买几个新的", "bought": false, "opened": false, "packed": false}, {"id": 60, "cat": "日用品", "name": "雨伞", "note": "要带", "bought": false, "opened": false, "packed": false}, {"id": 61, "cat": "日用品", "name": "创可贴", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 62, "cat": "日用品", "name": "小风扇", "note": "", "bought": false, "opened": false, "packed": false}];
+    const items = [{"id": 1, "cat": "冬季保暖", "name": "薄羽绒服", "note": "2-3件，目前只买了一件", "bought": false, "opened": false, "packed": false, "buy_target": 3, "buy_count": 1}, {"id": 2, "cat": "冬季保暖", "name": "薄款长袖/卫衣", "note": "居家穿，轻便", "bought": true, "opened": false, "packed": false}, {"id": 3, "cat": "冬季保暖", "name": "宽松睡裤", "note": "居家穿", "bought": true, "opened": false, "packed": false}, {"id": 4, "cat": "冬季保暖", "name": "冰丝衣服/冰丝睡衣", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 5, "cat": "冬季保暖", "name": "羊毛袜/厚袜子", "note": "爸买的", "bought": true, "opened": true, "packed": false}, {"id": 6, "cat": "冬季保暖", "name": "围巾", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 7, "cat": "冬季保暖", "name": "手套", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 8, "cat": "冬季保暖", "name": "护脖帽", "note": "能护脖子那种", "bought": true, "opened": false, "packed": false}, {"id": 9, "cat": "冬季小物", "name": "暖宝宝/暖贴", "note": "？待问能否带", "bought": false, "opened": false, "packed": false}, {"id": 10, "cat": "冬季小物", "name": "热水袋", "note": "？不一定能带", "bought": false, "opened": false, "packed": false}, {"id": 11, "cat": "文具", "name": "黑色中性笔", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 12, "cat": "文具", "name": "蓝色中性笔", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 13, "cat": "文具", "name": "铅笔", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 14, "cat": "文具", "name": "橡皮", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 15, "cat": "文具", "name": "修正带", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 16, "cat": "文具", "name": "便利贴", "note": "可以考虑买一点", "bought": false, "opened": false, "packed": false}, {"id": 17, "cat": "文具", "name": "订书机", "note": "爸买的", "bought": true, "opened": false, "packed": false}, {"id": 18, "cat": "文具", "name": "订书钉", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 19, "cat": "文具", "name": "小尺子", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 20, "cat": "文具", "name": "量角器", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 21, "cat": "文具", "name": "小号打孔器", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 22, "cat": "文具", "name": "胶带", "note": "一定要买，细的粗的都要", "bought": false, "opened": false, "packed": false}, {"id": 23, "cat": "文具", "name": "文件袋", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 24, "cat": "文具", "name": "文件风琴包", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 25, "cat": "文具", "name": "标签贴/粘贴标签", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 26, "cat": "日用品", "name": "防滑拖鞋", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 27, "cat": "日用品", "name": "鞋子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 28, "cat": "日用品", "name": "USB-A转USB-C数据线", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 29, "cat": "日用品", "name": "Type-C转USB-A母口OTG转接头", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 30, "cat": "日用品", "name": "U盘", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 31, "cat": "日用品", "name": "魔术贴扎带/理线带", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 32, "cat": "日用品", "name": "小收纳包/小铅笔盒", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 33, "cat": "日用品", "name": "AirTag保护套", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 34, "cat": "日用品", "name": "结实钥匙环/加厚钥匙扣环", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 35, "cat": "日用品", "name": "手机壳", "note": "已有1个，再来1个就够", "bought": false, "opened": false, "packed": false}, {"id": 36, "cat": "日用品", "name": "转换插头", "note": "小的大的都要买", "bought": true, "opened": false, "packed": false}, {"id": 37, "cat": "日用品", "name": "卷尺", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 38, "cat": "日用品", "name": "小钳子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 39, "cat": "日用品", "name": "小镊子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 40, "cat": "日用品", "name": "强力双面胶", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 41, "cat": "日用品", "name": "纳米胶/魔术胶/无痕胶", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 42, "cat": "日用品", "name": "免打孔挂钩", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 43, "cat": "日用品", "name": "窗户蚊帐/纱窗", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 44, "cat": "日用品", "name": "花洒支架/淋浴喷头支架", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 45, "cat": "日用品", "name": "小刷子", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 46, "cat": "日用品", "name": "衣服收纳袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 47, "cat": "日用品", "name": "抽绳袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 48, "cat": "日用品", "name": "脏衣抽绳袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 49, "cat": "日用品", "name": "可折叠购物袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 50, "cat": "日用品", "name": "厚一点的大塑料袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 51, "cat": "日用品", "name": "折叠垃圾桶/折叠垃圾架", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 52, "cat": "日用品", "name": "防水证件袋", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 53, "cat": "日用品", "name": "密码锁", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 54, "cat": "日用品", "name": "一次性压缩毛巾", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 55, "cat": "日用品", "name": "牙线", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 56, "cat": "日用品", "name": "牙刷", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 57, "cat": "日用品", "name": "擦眼镜纸", "note": "", "bought": true, "opened": false, "packed": false}, {"id": 58, "cat": "日用品", "name": "指甲刀", "note": "考虑再买", "bought": false, "opened": false, "packed": false}, {"id": 59, "cat": "日用品", "name": "耳塞", "note": "考虑再买几个新的", "bought": false, "opened": false, "packed": false}, {"id": 60, "cat": "日用品", "name": "雨伞", "note": "要带", "bought": false, "opened": false, "packed": false}, {"id": 61, "cat": "日用品", "name": "创可贴", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 62, "cat": "日用品", "name": "小风扇", "note": "", "bought": false, "opened": false, "packed": false}, {"id": 63, "cat": "其他", "name": "雪茄盒", "note": "", "bought": true, "opened": false, "packed": false}];
     render(items);
   </script>
 </body>
