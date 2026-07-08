@@ -35,13 +35,61 @@
       color: #ddd;
       width: 36px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
     }
     .tag.on { color: #333; font-weight: 600; }
+    .tag.wide { width: 44px; }
+
+    .buy-box {
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid #bbb;
+      border-radius: 2px;
+      background: #fff;
+    }
+    .buy-box.partial {
+      border-color: #333;
+      background: repeating-linear-gradient(
+        -45deg,
+        #fff,
+        #fff 2px,
+        #bbb 2px,
+        #bbb 3px
+      );
+    }
+    .buy-box.done {
+      border-color: #333;
+      background: #333;
+      position: relative;
+    }
+    .buy-box.done::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 1px;
+      width: 5px;
+      height: 8px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    .buy-num {
+      font-size: 9px;
+      color: #999;
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+    }
+    .tag.on .buy-num { color: #666; }
+
     .foot { margin-top: 40px; font-size: 12px; color: #ccc; text-align: center; }
     .err { color: #d44; font-size: 13px; }
     @media (max-width: 480px) {
       .tags { gap: 8px; }
-      .tag { width: 32px; font-size: 10px; }
+      .tag { width: 32px; }
+      .tag.wide { width: 40px; }
     }
   </style>
 </head>
@@ -54,11 +102,35 @@
   </div>
   <script>
     const ORDER = ["冬季保暖", "冬季小物", "文具", "日用品", "电子产品", "其他"];
-    const FIELDS = ["bought", "opened", "packed"];
-    const LABELS = ["已买", "已拆", "已装箱"];
+    const FIELDS = ["opened", "packed"];
+    const LABELS = ["已拆", "已装箱"];
 
     function esc(s) {
       return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+    }
+
+    function buyState(item) {
+      if (!item.buy_target) return item.bought ? "done" : "none";
+      if (item.buy_count >= item.buy_target) return "done";
+      if (item.buy_count > 0) return "partial";
+      return "none";
+    }
+
+    function renderBought(item) {
+      if (item.buy_target > 0) {
+        const st = buyState(item);
+        const on = st !== "none";
+        return `
+          <span class="tag wide${on ? " on" : ""}">
+            <div class="buy-box ${st}"></div>
+            <span class="buy-num">${item.buy_count}/${item.buy_target}</span>
+            已买
+          </span>
+        `;
+      }
+      return `
+        <span class="tag${item.bought ? " on" : ""}">已买</span>
+      `;
     }
 
     function render(items) {
@@ -79,6 +151,7 @@
                   ${item.note ? `<small>${esc(item.note)}</small>` : ""}
                 </div>
                 <div class="tags">
+                  ${renderBought(item)}
                   ${FIELDS.map((f, i) => `
                     <span class="tag${item[f] ? " on" : ""}">${LABELS[i]}</span>
                   `).join("")}
